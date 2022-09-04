@@ -1,4 +1,25 @@
 public class LinkStack {
+
+    private class Node {
+    
+        private Object data;
+        private Node next;
+    
+        private Node() {
+            this(null, null);
+        }
+    
+        private Node(Object data) {
+            this(data, null);
+        }
+    
+        private Node(Object data, Node next) {
+            this.data = data;
+            this.next = next;
+        }
+
+    }
+
     private Node top;
     
     public void clear() {
@@ -32,4 +53,5 @@ public class LinkStack {
             return p.data;
         }
     }
+
 }

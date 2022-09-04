@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class ListTest {
+
     public static void main(String[] args) {
         System.out.println(":exit                       退出程序");
         System.out.println("-c/-clear                   清空列表");
@@ -82,7 +83,7 @@ public class ListTest {
                 System.out.println(lst.indexOf(x));
             } else if (len == 2 && (operator.equals("-sio") || operator.equals("-strictIndexOf"))) {
                 String x = in.split(" ")[1];
-                try {
+            try {
                     System.out.println(lst.strictIndexOf(x));
                 } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
@@ -92,4 +93,5 @@ public class ListTest {
         }
         sc.close();
     }
+
 }

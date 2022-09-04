@@ -1,18 +1,22 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 // 使用Java泛型实现的链栈，支持迭代和toString
-class Stack<Item> implements Iterable<Item> {
+class Stack<T> implements Iterable<T> {
+
     private Node top;
-    private int N;
+    private int length;
 
     private class Node {
-        Item data;
-        Node next;
 
-        public Node(Item data, Node next) {
+        private T data;
+        private Node next;
+
+        private Node(T data, Node next) {
             this.data = data;
             this.next = next;
         }
+
     }
 
     public boolean isEmpty() {
@@ -20,10 +24,10 @@ class Stack<Item> implements Iterable<Item> {
     }
 
     public int length() {
-        return this.N;
+        return this.length;
     }
 
-    public Item peek() {
+    public T peek() {
         if (this.top == null) {
             return null;
         } else {
@@ -31,18 +35,18 @@ class Stack<Item> implements Iterable<Item> {
         }
     }
 
-    public void push(Item data) {
+    public void push(T data) {
         this.top = new Node(data, this.top);
-        this.N++;
+        this.length++;
     }
 
-    public Item pop() {
+    public T pop() {
         if (this.top == null) {
             return null;
         } else {
-            Item data = this.top.data;
+            T data = this.top.data;
             this.top = this.top.next;
-            this.N--;
+            this.length--;
             return data;
         }
     }
@@ -60,23 +64,32 @@ class Stack<Item> implements Iterable<Item> {
         return builder.toString();
     }
 
-    public Iterator<Item> iterator() {
+    public Iterator<T> iterator() {
         return new StackIterator();
     }
 
-    private class StackIterator implements Iterator<Item> {
+    private class StackIterator implements Iterator<T> {
+
         private Node current = top;
 
         public boolean hasNext() {
             return current != null;
         }
 
-        public void remove() {}
+        @Override
+        public void remove() {
+            // not supported
+        }
 
-        public Item next() {
-            Item data = current.data;
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            T data = current.data;
             current = current.next;
             return data;
         }
+
     }
+
 }

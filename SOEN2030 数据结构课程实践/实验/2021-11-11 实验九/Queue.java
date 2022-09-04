@@ -1,19 +1,23 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 // 使用Java泛型实现的链式队列，支持迭代和toString
-class Queue<Item> implements Iterable<Item> {
-    public Node front;
-    public Node rear;
-    private int N;
+class Queue<T> implements Iterable<T> {
+
+    private Node front;
+    private Node rear;
+    private int length;
 
     private class Node {
-        Item data;
-        Node next;
 
-        public Node(Item data, Node next) {
+        private T data;
+        private Node next;
+
+        private Node(T data, Node next) {
             this.data = data;
             this.next = next;
         }
+
     }
 
     public boolean isEmpty() {
@@ -21,10 +25,10 @@ class Queue<Item> implements Iterable<Item> {
     }
 
     public int length() {
-        return this.N;
+        return this.length;
     }
 
-    public Item getHead() {
+    public T getHead() {
         if (this.front != null) {
             return this.front.data;
         } else {
@@ -32,7 +36,7 @@ class Queue<Item> implements Iterable<Item> {
         }
     }
 
-    public Item getTail() {
+    public T getTail() {
         if (this.rear != null) {
             return this.rear.data;
         } else {
@@ -40,7 +44,7 @@ class Queue<Item> implements Iterable<Item> {
         }
     }
 
-    public void enqueue(Item data) {
+    public void enqueue(T data) {
         if (this.front == null) {
             this.front = new Node(data, null);
             this.rear = this.front;
@@ -48,19 +52,19 @@ class Queue<Item> implements Iterable<Item> {
             this.rear.next = new Node(data, null);
             this.rear = this.rear.next;
         }
-        this.N++;
+        this.length++;
     }
 
-    public Item dequeue() {
+    public T dequeue() {
         if (this.front == null) {
             return null;
         } else {
-            Item data = this.front.data;
+            T data = this.front.data;
             this.front = this.front.next;
             if (this.front == null) {
                 this.rear = null;
             }
-            this.N--;
+            this.length--;
             return data;
         }
     }
@@ -78,11 +82,11 @@ class Queue<Item> implements Iterable<Item> {
         this.front = newFront;
     }
 
-    public Queue<Item> reversed() {
+    public Queue<T> reversed() {
         if (this.front == null) {
-            return new Queue<Item>();
+            return new Queue<T>();
         }
-        Queue<Item> result = new Queue<Item>();
+        Queue<T> result = new Queue<T>();
         result.front = new Node(this.front.data, null);
         Node p = this.front.next;
         while (p != null) {
@@ -92,10 +96,10 @@ class Queue<Item> implements Iterable<Item> {
         return result;
     }
 
-    public Item[] toArray() {
-        Item[] result = (Item[]) new Object[this.N];
+    public T[] toArray() {
+        T[] result = (T[]) new Object[this.length];
         Node p = this.front;
-        for (int i = 0; i < this.N; i++) {
+        for (int i = 0; i < this.length; i++) {
             result[i] = p.data;
             p = p.next;
         }
@@ -103,9 +107,9 @@ class Queue<Item> implements Iterable<Item> {
     }
 
     public int[] toArrayInt() {
-        int[] result = new int[this.N];
+        int[] result = new int[this.length];
         Node p = this.front;
-        for (int i = 0; i < this.N; i++) {
+        for (int i = 0; i < this.length; i++) {
             result[i] = (int) p.data;
             p = p.next;
         }
@@ -125,23 +129,32 @@ class Queue<Item> implements Iterable<Item> {
         return builder.toString();
     }
 
-    public Iterator<Item> iterator() {
+    public Iterator<T> iterator() {
         return new QueueIterator();
     }
 
-    private class QueueIterator implements Iterator<Item> {
+    private class QueueIterator implements Iterator<T> {
+
         private Node current = front;
 
         public boolean hasNext() {
             return current != null;
         }
 
-        public void remove() {}
+        @Override
+        public void remove() {
+            // not supported
+        }
 
-        public Item next() {
-            Item data = current.data;
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            T data = current.data;
             current = current.next;
             return data;
         }
+
     }
+
 }

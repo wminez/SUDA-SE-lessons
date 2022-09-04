@@ -1,4 +1,5 @@
 public class SqStack {
+
     private Object[] stackElem;
     private int top;
 
@@ -27,9 +28,9 @@ public class SqStack {
         }
     }
 
-    public void push(Object x) throws Exception {
+    public void push(Object x) {
         if (this.top == this.stackElem.length) {
-            throw new Exception("stack is full");
+            throw new IllegalStateException("Stack is full");
         } else {
             this.stackElem[this.top] = x;
             this.top++;
@@ -44,4 +45,5 @@ public class SqStack {
             return this.stackElem[this.top];
         }
     }
+
 }

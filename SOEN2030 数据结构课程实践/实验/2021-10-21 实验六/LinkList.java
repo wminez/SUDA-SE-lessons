@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class LinkList {
+
     private Node head;
     private int length;
 
@@ -9,7 +10,7 @@ public class LinkList {
         head = new Node();
     }
 
-    public LinkList(int n, boolean order) throws Exception {
+    public LinkList(int n, boolean order) {
         this();
         if (order) {
             create1(n);
@@ -19,7 +20,7 @@ public class LinkList {
     }
 
     // 尾插法
-    public void create1(int n) throws Exception {
+    public void create1(int n) {
         Scanner sc = new Scanner(System.in);
         for (int i = 0; i < n; i++) {
             insert(0, sc.next());
@@ -28,7 +29,7 @@ public class LinkList {
     }
 
     // 头插法
-    public void create2(int n) throws Exception {
+    public void create2(int n) {
         Scanner sc = new Scanner(System.in);
         for (int i = 0; i < n; i++) {
             append(sc.next());
@@ -38,7 +39,7 @@ public class LinkList {
 
     public void clear() {
         length = 0;
-        head.next = null;
+        head.setNext(null);
     }
 
     public boolean isEmpty() {
@@ -53,55 +54,55 @@ public class LinkList {
         return length;
     }
 
-    public Object get(int index) throws Exception {
+    public Object get(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= length) {
-            throw new Exception("Invalid index " + index);
+            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
-        Node p = head.next;
+        Node p = head.getNext();
         for (int i = 0; i < index; i++) {
-            p = p.next;
+            p = p.getNext();
         }
-        return p.data;
+        return p.getNext();
     }
 
     public void append(Object x) {
         Node p = head;
         for (int i = 0; i < length; i++) {
-            p = p.next;
+            p = p.getNext();
         }
-        p.next = new Node(x);
+        p.setNext(new Node(x));
         length++;
     }
 
-    public void insert(int index, Object x) throws Exception {
+    public void insert(int index, Object x) throws IndexOutOfBoundsException {
         if (index < 0 || index > length) {
-            throw new Exception("Invalid index " + index);
+            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
         Node p = head;
         for (int i = 0; i < index; i++) {
-            p = p.next;
+            p = p.getNext();
         }
-        p.next = new Node(x, p.next);
+        p.setNext(new Node(x, p.getNext()));
         length++;
     }
 
-    public void remove(int index) throws Exception {
+    public void remove(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= length) {
-            throw new Exception("Invalid index " + index);
+            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
         Node p = head;
         for (int i = 0; i < index; i++) {
-            p = p.next;
+            p = p.getNext();
         }
-        p.next = p.next.next;
+        p.setNext(p.getNext().getNext());
         length--;
     }
 
     public int indexOf(Object x) {
-        Node p = head.next;
+        Node p = head.getNext();
         int i;
-        for (i = 0; p != null && !p.data.equals(x); i++) {
-            p = p.next;
+        for (i = 0; p != null && !p.getData().equals(x); i++) {
+            p = p.getNext();
         }
         if (p != null) {
             return i;
@@ -109,4 +110,5 @@ public class LinkList {
             return -1;
         }
     }
+
 }

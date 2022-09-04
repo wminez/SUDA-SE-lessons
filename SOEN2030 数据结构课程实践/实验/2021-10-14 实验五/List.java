@@ -1,4 +1,8 @@
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
 public class List {
+
     private Object[] listElem;
     private int length;
 
@@ -25,12 +29,12 @@ public class List {
     }
 
     // 返回下标为index的元素
-    public Object get(int index) throws Exception {
+    public Object get(int index) throws IndexOutOfBoundsException {
         if (index < 0) {
             index = length + index;
         }
         if (index < 0 || index >= length) {
-            throw new Exception("Invalid index " + index);
+            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
         return listElem[index];
     }
@@ -39,11 +43,7 @@ public class List {
     public void append(Object x) {
         // 若空间已满，扩展空间（×2）
         if (length == listElem.length) {
-            Object[] listElemTmp = listElem;
-            listElem = new Object[2 * listElem.length];
-            for (int i = 0; i < length; i++) {
-                listElem[i] = listElemTmp[i];
-            }
+            listElem = Arrays.copyOf(listElem, 2 * listElem.length);
         }
         // 增加元素
         listElem[length++] = x;
@@ -63,13 +63,9 @@ public class List {
         }
         // 若空间已满，扩展空间（×2）
         if (length == listElem.length) {
-            Object[] listElemTmp = listElem;
-            listElem = new Object[2 * listElem.length];
-            for (int i = 0; i < index; i++) {
-                listElem[i] = listElemTmp[i];
-            }
+            listElem = Arrays.copyOf(listElem, 2 * listElem.length);
             for (int i = index + 1; i < length + 1; i++) {
-                listElem[i] = listElemTmp[i - 1];
+                listElem[i] = listElem[i - 1];
             }
         }
         // 插入元素
@@ -78,9 +74,9 @@ public class List {
     }
 
     // 严格插入（不允许负下标与大于等于列表长度的下标）
-    public void strictInsert(int index, Object x) throws Exception {
+    public void strictInsert(int index, Object x) throws IndexOutOfBoundsException {
         if (index < 0 || index > length) {
-            throw new Exception("invalid index " + index);
+            throw new IndexOutOfBoundsException("invalid index " + index);
         }
         insert(index, x);
     }
@@ -99,17 +95,13 @@ public class List {
             }
             // 若空间使用率不足四分之一，收缩空间（×1/2）
             if (length <= listElem.length / 4) {
-                Object[] listElemTmp = listElem;
-                listElem = new Object[listElem.length / 2];
-                for (i = 0; i < length; i++) {
-                    listElem[i] = listElemTmp[i];
-                }
+                listElem = Arrays.copyOf(listElem, listElem.length / 2);
             }
         }
     }
 
     // 严格删除（元素不存在则抛出异常）
-    public void strictRemove(Object x) throws Exception {
+    public void strictRemove(Object x) throws NoSuchElementException {
         int i = 0;
         while (i < length && !listElem[i].equals(x)) {
             i++;
@@ -122,14 +114,10 @@ public class List {
             }
             // 若空间使用率不足四分之一，收缩空间（×1/2）
             if (length <= listElem.length / 4) {
-                Object[] listElemTmp = listElem;
-                listElem = new Object[listElem.length / 2];
-                for (i = 0; i < length; i++) {
-                    listElem[i] = listElemTmp[i];
-                }
+                listElem = Arrays.copyOf(listElem, listElem.length / 2);
             }
         } else {
-            throw new Exception(x + " not in list");
+            throw new NoSuchElementException(x + " not in list");
         }
     }
 
@@ -152,18 +140,14 @@ public class List {
         }
         // 若空间使用率不足四分之一，收缩空间（×1/2）
         if (length <= listElem.length / 4) {
-            Object[] listElemTmp = listElem;
-            listElem = new Object[listElem.length / 2];
-            for (int i = 0; i < length; i++) {
-                listElem[i] = listElemTmp[i];
-            }
+            listElem = Arrays.copyOf(listElem, listElem.length / 2);
         }
     }
 
     // 严格按下标删除（不允许负下标与大于等于列表长度的下标）
-    public void strictRemoveIndex(int index) throws Exception {
+    public void strictRemoveIndex(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index > length) {
-            throw new Exception("invalid index " + index);
+            throw new IndexOutOfBoundsException("invalid index " + index);
         }
         removeIndex(index);
     }
@@ -182,7 +166,7 @@ public class List {
     }
 
     // 返回列表中首次出现指定元素的下标，若不存在，则抛出异常
-    public int strictIndexOf(Object x) throws Exception {
+    public int strictIndexOf(Object x) throws NoSuchElementException {
         int i = 0;
         while (i < length && !listElem[i].equals(x)) {
             i++;
@@ -190,7 +174,7 @@ public class List {
         if (i < length) {
             return i;
         } else {
-            throw new Exception(x + " is not in list");
+            throw new NoSuchElementException(x + " is not in list");
         }
     }
 
@@ -213,4 +197,5 @@ public class List {
     public void display() {
         System.out.println(toString());
     }
+
 }

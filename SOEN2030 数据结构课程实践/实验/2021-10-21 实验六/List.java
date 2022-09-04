@@ -1,16 +1,18 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 // 使用Java泛型实现的链表，支持迭代、输出数组、排序、逆序等方法
-public class List<Item extends Comparable<Item>> implements Iterable<Item> {
+public class List<T extends Comparable<T>> implements Iterable<T> {
+
     private Node head;
     private int curLen;
 
     // Node类型
     private class Node {
-        Item data;
+        T data;
         Node next;
 
-        public Node(Item data, Node next) {
+        public Node(T data, Node next) {
             this.data = data;
             this.next = next;
         }
@@ -22,19 +24,19 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
         this.curLen = 0;
     }
 
-    public List(Item[] arr) {
+    public List(T[] arr) {
         this();
         Node p = this.head;
-        for (Item i : arr) {
+        for (T i : arr) {
             p.next = new Node(i, null);
             p = p.next;
         }
     }
 
-    public List(List<Item> lst) {
+    public List(List<T> lst) {
         this();
         Node p = this.head;
-        for (Item i : lst) {
+        for (T i : lst) {
             p.next = new Node(i, null);
             p = p.next;
         }
@@ -56,9 +58,9 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 获取对应下标的元素
-    public Item get(int index) throws Exception {
+    public T get(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= this.curLen) {
-            throw new Exception("Invalid index " + index);
+            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
         Node p = this.head.next;
         for (int i = 0; i < index; i++) {
@@ -68,7 +70,7 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 增加元素
-    public void append(Item x) {
+    public void append(T x) {
         Node p = this.head;
         for (int i = 0; i < this.curLen; i++) {
             p = p.next;
@@ -78,7 +80,7 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 扩展列表
-    public void extend(Item[] arr) {
+    public void extend(T[] arr) {
         Node p = this.head;
         for (int i = 0; i < this.curLen; i++) {
             p = p.next;
@@ -90,12 +92,12 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
         this.curLen += arr.length;
     }
 
-    public void extend(List<Item> lst) {
+    public void extend(List<T> lst) {
         Node p = this.head;
         for (int i = 0; i < this.curLen; i++) {
             p = p.next;
         }
-        for (Item i : lst) {
+        for (T i : lst) {
             p.next = new Node(i, null);
             p = p.next;
         }
@@ -103,9 +105,9 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 插入元素
-    public void insert(int index, Item x) throws Exception {
+    public void insert(int index, T x) throws IndexOutOfBoundsException {
         if (index < 0 || index > this.curLen) {
-            throw new Exception("Invalid index " + index);
+            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
         Node p = this.head;
         for (int i = 0; i < index; i++) {
@@ -116,13 +118,13 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 删除指定元素
-    public void remove(Item x) throws Exception {
+    public void remove(T x) throws NoSuchElementException {
         Node p = this.head;
         while (p.next != null && !p.next.data.equals(x)) {
             p = p.next;
         }
         if (p.next == null) {
-            throw new Exception(x + "is not in list");
+            throw new NoSuchElementException(x + "is not in list");
         } else {
             p.next = p.next.next;
             this.curLen--;
@@ -130,9 +132,9 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 按下标删除元素
-    public void delete(int index) throws Exception {
+    public void delete(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= this.curLen) {
-            throw new Exception("Invalid index " + index);
+            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
         Node p = this.head;
         for (int i = 0; i < index; i++) {
@@ -143,7 +145,7 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 查找元素对应下标
-    public int index(Item x) throws Exception {
+    public int index(T x) throws NoSuchElementException {
         Node p = this.head.next;
         int i;
         for (i = 0; p != null && !p.data.equals(x); i++) {
@@ -152,13 +154,13 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
         if (p != null) {
             return i;
         } else {
-            throw new Exception(i + "is not in list");
+            throw new NoSuchElementException(i + "is not in list");
         }
     }
 
     // 返回复制后的新列表
-    public List<Item> copy() {
-        List<Item> result = new List<Item>();
+    public List<T> copy() {
+        List<T> result = new List<>();
         Node p = this.head.next;
         Node q = result.head;
         while (p != null) {
@@ -171,7 +173,7 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 统计列表中指定元素的个数
-    public int count(Item x) {
+    public int count(T x) {
         int result = 0;
         Node p = this.head.next;
         while (p != null) {
@@ -200,7 +202,8 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     private Node merge(Node a, Node b) {
-        Node dummyHead, curr;
+        Node dummyHead;
+        Node curr;
         dummyHead = new Node(null, null);
         curr = dummyHead;
         while (a != null && b != null) {
@@ -221,7 +224,8 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
         if (head == null) {
             return head;
         }
-        Node slow, fast;
+        Node slow;
+        Node fast;
         slow = fast = head;
         while (fast.next != null && fast.next.next != null) {
             slow = slow.next;
@@ -242,8 +246,8 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 返回逆序链表
-    public List<Item> reversed() {
-        List<Item> result = new List<Item>();
+    public List<T> reversed() {
+        List<T> result = new List<>();
         result.head = new Node(null, null);
         Node p = this.head.next;
         while (p != null) {
@@ -255,8 +259,8 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 返回数组形式的列表
-    public Item[] toArray() {
-        Item[] result = (Item[]) new Object[this.curLen];
+    public T[] toArray() {
+        T[] result = (T[]) new Object[this.curLen];
         // 由于类型擦除的问题，Java不支持泛型数组的创建，只能强制转换
         Node p = this.head.next;
         for (int i = 0; i < this.curLen; i++) {
@@ -294,24 +298,33 @@ public class List<Item extends Comparable<Item>> implements Iterable<Item> {
     }
 
     // 返回迭代器，以支持迭代
-    public Iterator<Item> iterator() {
+    public Iterator<T> iterator() {
         return new LinkListIterator();
     }
 
     // 迭代器
-    private class LinkListIterator implements Iterator<Item> {
+    private class LinkListIterator implements Iterator<T> {
+
         private Node current = head.next;
 
         public boolean hasNext() {
             return current != null;
         }
 
-        public void remove() {}
+        @Override
+        public void remove() {
+            // not supported
+        }
 
-        public Item next() {
-            Item data = current.data;
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            T data = current.data;
             current = current.next;
             return data;
         }
+
     }
+
 }
